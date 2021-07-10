@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Statuses, TodoList } from '../src/common/types';
+import { TodoList } from '../src/common/types';
 import { getTodoList } from './api/todoList';
 
 
