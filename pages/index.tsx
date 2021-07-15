@@ -1,6 +1,5 @@
-import Head from 'next/head';
 import Link from 'next/link';
-import { Statuses, TodoList } from '../src/common/types';
+import { TodoList } from '../src/common/types';
 import { getTodoList } from './api/todoList';
 
 
@@ -12,27 +11,20 @@ export default function TodoApp({
   todoList = []
 }: TodoAppProps) {
   return (
-    <div>
-      <Head>
-        <title>Todo App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main>
-        <h1>
-          Todo Lists
-        </h1>
-        {
-          todoList.map((todo) => (
-            <div key={todo.id}>
-              <ul>
-                <li><span>{todo.name}</span></li>
-              </ul>
-            </div>
-          ))
-        }
-      </main>
-    </div >
+    <main>
+      <h1>
+        Todo Lists
+      </h1>
+      {
+        todoList.map((todo) => (
+          <div key={todo.id}>
+            <ul>
+              <li><Link href={`/todo-list/${todo.id}`}>{todo.name}</Link></li>
+            </ul>
+          </div>
+        ))
+      }
+    </main>
   )
 }
 

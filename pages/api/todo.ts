@@ -1,11 +1,18 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { Todo } from '../../src/common/types';
+import { Todo, Statuses } from '../../src/common/types';
 import { TODO_LIST } from './todoList';
 
 interface CreateTodoBody {
   todoListId: string;
   todo: Todo;
+}
+
+interface UpdateTodoBody {
+  todoListId: string;
+  todoId: string;
+  status: Statuses;
+  content: string;
 }
 
 export default function handler(
@@ -26,5 +33,30 @@ export default function handler(
     }
 
     res.status(200).json(todo);
+  }
+
+  if (req.method === 'PUT') {
+    const body: UpdateTodoBody = req.body;
+    const {
+      todoListId,
+      todoId,
+      status,
+      content,
+    } = body;
+
+    const foundList = TODO_LIST.find((todoList) => todoList.id === todoListId);
+
+    if (foundList) {
+      const foundItem = foundList.items.find((todo) => todo.id === todoId);
+
+      if (foundItem) {
+        foundItem.content = content || foundItem.content;
+        foundItem.status = status || foundItem.status;
+        res.status(200).json(foundItem);
+        return;
+      }
+    }
+
+    res.status(404);
   }
 }
