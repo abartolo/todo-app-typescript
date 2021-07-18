@@ -1,9 +1,13 @@
 import { useRef } from 'react';
+import { useQuery } from 'react-query';
 import Head from 'next/head';
+import Link from 'next/link';
 import { TodoList } from '../src/common/types';
+import getTodoLists from '../src/services/getTodoLists';
 
 export default function AddTodoPage() {
   const nameRef = useRef<HTMLInputElement>(null);
+  const { data: todoLists, isLoading } = useQuery('todoLists', getTodoLists);
 
   const addTodoList = async () => {
     const name = nameRef?.current?.value;
@@ -32,7 +36,6 @@ export default function AddTodoPage() {
     }
   };
 
-
   return (
     <div>
       <Head>
@@ -43,6 +46,21 @@ export default function AddTodoPage() {
         <input id="todoListName" ref={nameRef} type="text" />
 
         <button onClick={addTodoList}>Add</button>
+
+
+        <div>
+          <h3>Current Todo Lists</h3>
+
+          {
+            !isLoading && todoLists && todoLists.map((todo) => (
+              <div key={todo.id}>
+                <ul>
+                  <li><Link href={`/todo-list/${todo.id}`}>{todo.name}</Link></li>
+                </ul>
+              </div>
+            ))
+          }
+        </div>
       </main>
     </div>
   );
